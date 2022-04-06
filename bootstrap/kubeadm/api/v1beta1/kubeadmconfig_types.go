@@ -256,14 +256,14 @@ type SecretFileSource struct {
 // Only one field may be populated in any given instance. Developers adding new
 // sources of data for target systems should add them here.
 type PasswdSource struct {
-	// Secret represents a secret that should populate this file.
+	// Secret represents a secret that should populate this password.
 	Secret SecretPasswdSource `json:"secret"`
 }
 
 // SecretPasswdSource adapts a Secret into a PasswdSource.
 //
 // The contents of the target Secret's Data field will be presented
-// as files and passwd using the keys in the Data field as the file names.
+// as passwd using the keys in the Data field as the file names.
 type SecretPasswdSource struct {
 	// Name of the secret in the KubeadmBootstrapConfig's namespace to use.
 	Name string `json:"name"`

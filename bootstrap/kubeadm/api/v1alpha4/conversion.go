@@ -37,6 +37,13 @@ func (src *KubeadmConfig) ConvertTo(dstRaw conversion.Hub) error {
 		return err
 	}
 
+	dst.Spec.Users = restored.Spec.Users
+	for i := range restored.Spec.Users {
+		if restored.Spec.Users[i].PasswdFrom != nil {
+			dst.Spec.Users[i].PasswdFrom = restored.Spec.Users[i].PasswdFrom
+		}
+	}
+
 	dst.Spec.Ignition = restored.Spec.Ignition
 	if restored.Spec.InitConfiguration != nil {
 		if dst.Spec.InitConfiguration == nil {
@@ -146,4 +153,9 @@ func Convert_v1beta1_InitConfiguration_To_v1alpha4_InitConfiguration(in *bootstr
 func Convert_v1beta1_JoinConfiguration_To_v1alpha4_JoinConfiguration(in *bootstrapv1.JoinConfiguration, out *JoinConfiguration, s apiconversion.Scope) error {
 	// InitConfiguration.Patches does not exist in kubeadm v1alpha4 API.
 	return autoConvert_v1beta1_JoinConfiguration_To_v1alpha4_JoinConfiguration(in, out, s)
+}
+
+func Convert_v1beta1_User_To_v1alpha4_User(in *bootstrapv1.User, out *User, s apiconversion.Scope) error {
+	// User.PasswdFrom does not exist in kubeadm v1alpha4 API.
+	return autoConvert_v1beta1_User_To_v1alpha4_User(in, out, s)
 }

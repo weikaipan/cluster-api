@@ -38,6 +38,13 @@ func (src *KubeadmConfig) ConvertTo(dstRaw conversion.Hub) error {
 		return err
 	}
 
+	dst.Spec.Users = restored.Spec.Users
+	for i := range restored.Spec.Users {
+		if restored.Spec.Users[i].PasswdFrom != nil {
+			dst.Spec.Users[i].PasswdFrom = restored.Spec.Users[i].PasswdFrom
+		}
+	}
+
 	if restored.Spec.JoinConfiguration != nil && restored.Spec.JoinConfiguration.NodeRegistration.IgnorePreflightErrors != nil {
 		if dst.Spec.JoinConfiguration == nil {
 			dst.Spec.JoinConfiguration = &bootstrapv1.JoinConfiguration{}
@@ -214,4 +221,9 @@ func Convert_v1beta1_JoinConfiguration_To_upstreamv1beta1_JoinConfiguration(in *
 func Convert_v1beta1_KubeadmConfigSpec_To_v1alpha3_KubeadmConfigSpec(in *bootstrapv1.KubeadmConfigSpec, out *KubeadmConfigSpec, s apiconversion.Scope) error {
 	// KubeadmConfigSpec.Ignition does not exist in kubeadm v1alpha3 API.
 	return autoConvert_v1beta1_KubeadmConfigSpec_To_v1alpha3_KubeadmConfigSpec(in, out, s)
+}
+
+func Convert_v1beta1_User_To_v1alpha3_User(in *bootstrapv1.User, out *User, s apiconversion.Scope) error {
+	// User.PasswdFrom does not exist in kubeadm v1alpha3 API.
+	return autoConvert_v1beta1_User_To_v1alpha3_User(in, out, s)
 }
